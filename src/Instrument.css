@@ -1,0 +1,17 @@
+:local(.global).on {
+  background-color:blue;
+}
+
+:local(.global) td {
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+}
+
+:local(.global) td.on {
+    background-color: black;
+}
+
+:local(.global) td.currentBeat {
+    border-color: red;
+}
