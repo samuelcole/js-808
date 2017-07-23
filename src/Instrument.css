@@ -8,6 +8,11 @@
     border: 1px solid black;
 }
 
+:local(.global) td.name {
+    border: none;
+    width: 150px;
+}
+
 :local(.global) td.on {
     background-color: black;
 }

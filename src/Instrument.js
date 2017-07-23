@@ -10,6 +10,7 @@ function Instrument(props) {
         on: props.beats[props.currentBeat]
       })}
     >
+      <td className="name">{props.name}</td>
       {times(props.beatCount, i => {
         return (
           <td

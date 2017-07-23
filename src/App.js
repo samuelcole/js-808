@@ -123,6 +123,7 @@ class App extends Component {
         <table>
           <thead>
             <tr>
+              <th />
               {times(BEAT_COUNT, i => {
                 return (
                   <th key={i}>
