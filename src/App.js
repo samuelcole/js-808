@@ -9,6 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      bpm: 60,
       currentBeat: 0,
       instruments: [
         {
@@ -29,6 +30,15 @@ class App extends Component {
         }
       ]
     };
+    this.startInterval(this.state.bpm);
+  }
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.bpm !== nextState.bpm) {
+      this.stopInterval();
+      this.startInterval(nextState.bpm);
+    }
+  }
+  startInterval(bpm) {
     this.interval = setInterval(() => {
       const newBeat =
         this.state.currentBeat < BEAT_COUNT - 1
@@ -37,7 +47,10 @@ class App extends Component {
       this.setState({
         currentBeat: newBeat
       });
-    }, 500);
+    }, 60000 / bpm);
+  }
+  stopInterval = () => {
+    clearInterval(this.interval);
   }
   toggleBeat(instrumentIndex, beatIndex) {
     const beats = this.state.instruments[instrumentIndex].beats.slice();
@@ -48,12 +61,21 @@ class App extends Component {
       instruments: instruments
     });
   }
+  changeBpm = event => {
+    this.setState({
+      bpm: event.target.value
+    });
+  }
   render() {
     return (
       <div className="App">
         <div className="App-header">
           <h2>Music Man</h2>
         </div>
+        <label>
+          BPM:
+          <input value={this.state.bpm} onChange={this.changeBpm} />
+        </label>
         <table>
           <thead>
             {times(BEAT_COUNT, i => {
