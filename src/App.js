@@ -37,7 +37,6 @@ class App extends Component {
         return new Array(BEAT_COUNT);
       });
     };
-    console.log(createEmptySequenceValue());
 
     this.state = {
       bpm: 60,
