@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Instrument from "./Instrument";
-import "./App.css";
+import styles from "./App.css";
 import { times, map } from "lodash";
 
 const BEAT_COUNT = 16;
@@ -62,7 +62,11 @@ class App extends Component {
       this.startInterval(nextState.bpm);
     }
   }
-  startInterval(bpm) {
+  startInterval = bpm => {
+    if (this.interval) {
+      return;
+    }
+    bpm = bpm || this.state.bpm;
     this.interval = setInterval(() => {
       const newBeat =
         this.state.currentBeat < BEAT_COUNT - 1
@@ -75,6 +79,7 @@ class App extends Component {
   }
   stopInterval = () => {
     clearInterval(this.interval);
+    delete(this.interval);
   };
   toggleBeat(instrumentIndex, beatIndex) {
     const sequence = this.state.sequences[this.state.currentSequence].value[
@@ -99,10 +104,8 @@ class App extends Component {
   };
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Music Man</h2>
-        </div>
+      <div className={styles.global}>
+        <h1>Music Man</h1>
         <label>
           BPM:
           <input value={this.state.bpm} onChange={this.changeBpm} />
@@ -120,6 +123,8 @@ class App extends Component {
             )}
           </select>
         </label>
+        <button onClick={this.stopInterval}>stop</button>
+        <button onClick={() => this.startInterval()}>play</button>
         <table>
           <thead>
             <tr>
