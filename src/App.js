@@ -8,27 +8,51 @@ const BEAT_COUNT = 16;
 class App extends Component {
   constructor(props) {
     super(props);
+    const instruments = [
+      {
+        name: "Kick",
+        beats: new Array(BEAT_COUNT)
+      },
+      {
+        name: "Snare",
+        beats: new Array(BEAT_COUNT)
+      },
+      {
+        name: "Open Hat",
+        beats: new Array(BEAT_COUNT)
+      },
+      {
+        name: "Closed Hat",
+        beats: new Array(BEAT_COUNT)
+      }
+    ];
+
+    const createEmptySequenceValue = () => {
+      return map(instruments, () => {
+        return new Array(BEAT_COUNT);
+      });
+    };
+    console.log(createEmptySequenceValue());
+
     this.state = {
       bpm: 60,
       currentBeat: 0,
-      instruments: [
+      currentSequence: 0,
+      sequences: [
         {
-          name: "Kick",
-          beats: new Array(BEAT_COUNT)
+          name: "Sequence 1",
+          value: createEmptySequenceValue()
         },
         {
-          name: "Snare",
-          beats: new Array(BEAT_COUNT)
+          name: "Sequence 2",
+          value: createEmptySequenceValue()
         },
         {
-          name: "Open Hat",
-          beats: new Array(BEAT_COUNT)
-        },
-        {
-          name: "Closed Hat",
-          beats: new Array(BEAT_COUNT)
+          name: "Sequence 3",
+          value: createEmptySequenceValue()
         }
-      ]
+      ],
+      instruments: instruments
     };
     this.startInterval(this.state.bpm);
   }
@@ -51,21 +75,28 @@ class App extends Component {
   }
   stopInterval = () => {
     clearInterval(this.interval);
-  }
+  };
   toggleBeat(instrumentIndex, beatIndex) {
-    const beats = this.state.instruments[instrumentIndex].beats.slice();
-    beats[beatIndex] = !beats[beatIndex];
-    const instruments = this.state.instruments.slice();
-    instruments[instrumentIndex].beats = beats;
+    const sequence = this.state.sequences[this.state.currentSequence].value[
+      instrumentIndex
+    ];
+    sequence[beatIndex] = !sequence[beatIndex];
+    const sequences = this.state.sequences.slice();
+    sequences[this.state.currentSequence].value[instrumentIndex] = sequence;
     this.setState({
-      instruments: instruments
+      sequences: sequences
     });
   }
   changeBpm = event => {
     this.setState({
       bpm: event.target.value
     });
-  }
+  };
+  changeSequence = event => {
+    this.setState({
+      currentSequence: event.target.value
+    });
+  };
   render() {
     return (
       <div className="App">
@@ -76,23 +107,43 @@ class App extends Component {
           BPM:
           <input value={this.state.bpm} onChange={this.changeBpm} />
         </label>
+        <label>
+          Sequence:
+          <select
+            onChange={this.changeSequence}
+            value={this.state.currentSequence}
+          >
+            {map(this.state.sequences, (sequence, sequenceIndex) =>
+              <option value={sequenceIndex} key={sequenceIndex}>
+                {sequence.name}
+              </option>
+            )}
+          </select>
+        </label>
         <table>
           <thead>
-            {times(BEAT_COUNT, i => {
-              return (
-                <td>
-                  {i + 1}
-                </td>
-              );
-            })}
+            <tr>
+              {times(BEAT_COUNT, i => {
+                return (
+                  <th key={i}>
+                    {i + 1}
+                  </th>
+                );
+              })}
+            </tr>
           </thead>
           <tbody>
             {map(this.state.instruments, (instrument, instrumentIndex) =>
               <Instrument
+                key={instrumentIndex}
                 name={instrument.name}
                 beatCount={BEAT_COUNT}
                 currentBeat={this.state.currentBeat}
-                beats={instrument.beats}
+                beats={
+                  this.state.sequences[this.state.currentSequence].value[
+                    instrumentIndex
+                  ]
+                }
                 onToggle={beatIndex =>
                   this.toggleBeat(instrumentIndex, beatIndex)}
               />
