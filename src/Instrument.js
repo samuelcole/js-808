@@ -2,12 +2,17 @@ import React from "react";
 import styles from "./Instrument.css";
 import classNames from "classnames";
 import { times } from "lodash";
+import play from 'audio-play';
 
 function Instrument(props) {
+  const on = props.beats[props.currentBeat];
+  if (on && props.soundPromise) {
+    props.soundPromise.then(play);
+  }
   return (
     <tr
       className={classNames(styles.global, {
-        on: props.beats[props.currentBeat]
+        on: on
       })}
     >
       <td className="name">{props.name}</td>

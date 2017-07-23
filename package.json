@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.2.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "react": "^15.6.1",

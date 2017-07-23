@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Instrument from "./Instrument";
 import styles from "./App.css";
 import { times, map } from "lodash";
+import load from 'audio-loader';
 
 const BEAT_COUNT = 16;
 
@@ -11,19 +12,23 @@ class App extends Component {
     const instruments = [
       {
         name: "Kick",
-        beats: new Array(BEAT_COUNT)
+        beats: new Array(BEAT_COUNT),
+        soundPromise: load(require('./sounds/A.wav'))
       },
       {
         name: "Snare",
-        beats: new Array(BEAT_COUNT)
+        beats: new Array(BEAT_COUNT),
+        soundPromise: load(require('./sounds/C.wav'))
       },
       {
         name: "Open Hat",
-        beats: new Array(BEAT_COUNT)
+        beats: new Array(BEAT_COUNT),
+        soundPromise: load(require('./sounds/F.wav'))
       },
       {
         name: "Closed Hat",
-        beats: new Array(BEAT_COUNT)
+        beats: new Array(BEAT_COUNT),
+        soundPromise: load(require('./sounds/G.wav'))
       }
     ];
 
@@ -145,6 +150,7 @@ class App extends Component {
                 name={instrument.name}
                 beatCount={BEAT_COUNT}
                 currentBeat={this.state.currentBeat}
+                soundPromise={instrument.soundPromise}
                 beats={
                   this.state.sequences[this.state.currentSequence].value[
                     instrumentIndex
